@@ -1,0 +1,42 @@
+[
+  {
+    "file": "evaluation/golden-questions.json",
+    "sha256": "f4561e92cd4f009f169e5404ff7dbd24a856466a42e477729c5f2fa79e308c3f"
+  },
+  {
+    "file": "evaluation/corpus/distractor.md",
+    "sha256": "85bf186496851965785fa3d0c686400e0c407d4f6de2cc61f820b0c3f79b555f"
+  },
+  {
+    "file": "evaluation/corpus/injection.md",
+    "sha256": "72c4df2bf4b24c6433426ab094587ac061ccf3e2c77165f15fce6c7b98f3641f"
+  },
+  {
+    "file": "evaluation/corpus/retention-a.md",
+    "sha256": "b8ef82cc88d54dd37b18c0d93cafc151382e0a5dd84247fb5e3f8286e298343a"
+  },
+  {
+    "file": "evaluation/corpus/retention-b.md",
+    "sha256": "af2cdcd5417ea788530ffa09c0239b9b10d7672b8a4ba0ac9a4877e654fd7256"
+  },
+  {
+    "file": "evaluation/corpus/returns.md",
+    "sha256": "ff56b36eefffca4bca2a4bb1b801d2165e42fb634d2015f20fc4e21868fd8cbc"
+  },
+  {
+    "file": "evaluation/corpus/secret.md",
+    "sha256": "da579d6b46009dd02c1ccdc899159d5e5ed90d7fa47b6b3e5f681cfc591ba73b"
+  },
+  {
+    "file": "evaluation/corpus/shipping.md",
+    "sha256": "e374a2f76280e9565b12220be4567de3a7427ee85cdc3fcd3f7ba301d281b2b2"
+  },
+  {
+    "file": "evaluation/corpus/support.md",
+    "sha256": "ab67a74580f6220a95276724fd7cacf5db051ac620e7bea386ee26f73a52bff4"
+  },
+  {
+    "file": "evaluation/corpus/uptime.md",
+    "sha256": "b0e80d03dd52fa7e5f13047715ab707fdac0c17c79dc96f5e897b02bb975488c"
+  }
+]
