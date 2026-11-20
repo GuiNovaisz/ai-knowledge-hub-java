@@ -4,6 +4,8 @@
 
 **READY FOR REVIEW** · [PR #1 → dev](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) · [verificação e limites](docs/review.md) · [baseline medida](docs/baseline-report.md)
 
+[Deterministic integration baseline](docs/baseline-report.md) e [Real-model evaluation — Ollama, 10/10](docs/real-model-evaluation.md) são avaliações separadas.
+
 Backend Java de conhecimento com pipeline explícito de ingestão e RAG: documentos → parsing → normalização → chunks → embeddings → PostgreSQL/pgvector → retrieval → filtros → contexto → geração → validação de citações.
 
 Uma pergunta sem evidência suficiente recebe `INSUFFICIENT_EVIDENCE` antes de chamar o chat. As citações são derivadas dos chunks selecionados pelo backend. O modelo não fornece quotes nem IDs de documentos livremente.
@@ -54,7 +56,7 @@ Para a avaliação opcional com Ollama real, use um banco de desenvolvimento e m
 java -jar target/ai-knowledge-hub-java-0.1.0-dev.jar --spring.profiles.active=evaluation
 ```
 
-Esse job cria duas KBs de avaliação novas, preserva o corpus existente, processa os dez casos e grava `target/evaluation/real-model.json`; não limpa o banco. O relatório inclui Recall/Precision/MRR/Hit Rate por caso/estratégia, gates de answerability/citações e `RelevancyEvaluator` do Spring AI como juiz probabilístico complementar. Erros e gates falsos aparecem no relatório e devem ser revisados; a execução do job não significa que os gates passaram.
+Esse job exige banco isolado sem corpus preexistente, cria duas KBs novas, processa os dez casos e grava `target/evaluation/real-model.json`; não limpa o banco. O relatório inclui Recall/Precision/MRR/Hit Rate por caso/estratégia, gates de answerability/citações e `RelevancyEvaluator` do Spring AI como juiz probabilístico complementar. Erros e gates falsos aparecem no relatório e devem ser revisados; a execução do job não significa que os gates passaram.
 
 ## Configuração
 
