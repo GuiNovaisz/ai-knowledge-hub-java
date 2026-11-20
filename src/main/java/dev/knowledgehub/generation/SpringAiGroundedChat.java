@@ -35,7 +35,8 @@ public class SpringAiGroundedChat implements GroundedChat {
         try {
             String content=response.getResult().getOutput().getText();
             if(content==null || content.length()>12000) throw new IllegalArgumentException();
-            Draft draft=converter.convert(content);
+            // Parse without logging the provider payload on schema/JSON errors.
+            Draft draft=new tools.jackson.databind.ObjectMapper().readValue(content,Draft.class);
             return new Completion(draft,model,response.getMetadata().getUsage()==null ? null : response.getMetadata().getUsage().getTotalTokens());
         } catch(RuntimeException e) { throw new HubException("INVALID_MODEL_RESPONSE",502); }
     }

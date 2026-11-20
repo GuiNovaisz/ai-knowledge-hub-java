@@ -38,7 +38,7 @@ O endpoint técnico oferece VECTOR/LEXICAL/HYBRID. LEXICAL ordena somente por FT
 
 ## Contexto e geração
 
-O orçamento explícito soma texto e overhead por fonte até 6.000 caracteres. Dois passes priorizam diversidade de documentos; no máximo dois chunks por documento, sem truncar quotes. Hash textual normalizado e Jaccard de palavras removem duplicatas e near duplicates. Fontes de outra KB, abaixo do threshold ou bloqueadas pelo filtro não chegam ao chat.
+O orçamento explícito soma texto e overhead por fonte até 6.000 caracteres. Dois passes priorizam diversidade de documentos; no máximo dois chunks por documento, sem truncar quotes. Igualdade textual normalizada remove cópias exatas; Jaccard remove near duplicates apenas dentro do mesmo documento e com os mesmos números. Fontes distintas quase iguais são preservadas, pois pequenas diferenças podem representar contradições. Fontes de outra KB, abaixo do threshold ou bloqueadas pelo filtro não chegam ao chat.
 
 Sem fontes, `INSUFFICIENT_EVIDENCE` é decidido pelo backend. Com fontes, o modelo recebe system policy separada, evidência como user data separada e a pergunta. Ele devolve status e claims com IDs controlados `S1..Sn`; o backend exige referências em cada claim, valida membership/KB e monta quotes diretamente dos chunks. Nenhum source ID desconhecido é aceito.
 

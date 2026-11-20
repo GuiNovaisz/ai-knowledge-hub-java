@@ -28,9 +28,13 @@ public class QueryService {
             var hits=retriever.retrieve(kb,question,topK,documentId,ChunkRetriever.Strategy.VECTOR);
             List<RetrievalMetadata> metadata=new ArrayList<>();
             for(int n=0;n<hits.size();n++) { var h=hits.get(n); metadata.add(new RetrievalMetadata(n+1,h.chunkId(),h.documentId(),h.filename(),h.page(),h.score(),h.rankScore())); }
-            var sources=assembler.assemble(kb,reranker.rerank(question,hits));
+            long rerankStarted=System.nanoTime();
+            var ranked=reranker.rerank(question,hits);
+            metrics.timer("hub.rerank.latency").record(System.nanoTime()-rerankStarted,java.util.concurrent.TimeUnit.NANOSECONDS);
+            var sources=assembler.assemble(kb,ranked);
             if(sources.isEmpty()) return abstain(metadata,null,null);
             var completion=chat.generate(question,sources);
+            if(completion==null) throw new dev.knowledgehub.shared.HubException("INVALID_MODEL_RESPONSE",502);
             List<Citation> valid;
             try { valid=citations.validate(kb,completion.draft(),sources); }
             catch(RuntimeException e) { metrics.counter("hub.citation.invalid").increment(); throw e; }

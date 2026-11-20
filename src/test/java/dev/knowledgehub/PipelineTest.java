@@ -67,6 +67,14 @@ class PipelineTest {
         assertThat(sources).hasSize(1); assertThat(sources.getFirst().hit()).isEqualTo(good);
         assertThat(assembler.assemble(kb,List.of(hit(kb,"x".repeat(7000),0.9)))).isEmpty();
     }
+    @Test void nearlyIdenticalContradictorySourcesSurviveContextDeduplication() {
+        UUID kb=UUID.randomUUID();var assembler=new ContextAssembler(settings,new EvidenceFilter());
+        String prefix="Customer data retention policy after account closure was approved on the same date and applies to every customer for ";
+        var first=hit(kb,prefix+"30 days.",1);var second=hit(kb,prefix+"90 days.",1);
+        assertThat(assembler.assemble(kb,List.of(first,second))).hasSize(2);
+        var sameDocument=new ChunkRetriever.Hit(second.chunkId(),kb,first.documentId(),first.filename(),1,1,"",first.ingestionVersion(),second.text(),1,1);
+        assertThat(assembler.assemble(kb,List.of(first,sameDocument))).hasSize(2);
+    }
     @Test void citationsAreDerivedFromAllowedChunksAndUnknownIdsFailClosed() {
         UUID kb=UUID.randomUUID(); var h=hit(kb,"Original evidence",1);
         var sources=List.of(new ContextAssembler.Source("S1",h));

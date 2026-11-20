@@ -20,8 +20,10 @@ public class ContextAssembler {
             String normalized=h.text().toLowerCase(Locale.ROOT).replaceAll("\\s+"," ");
             if(texts.contains(normalized) || perDoc.getOrDefault(h.documentId(),0)>=pass) continue;
             if(used+h.text().length()+80>settings.contextCharacters()) continue;
-            // Near duplicates are skipped using token-set Jaccard, with no model call.
-            boolean duplicate=result.stream().anyMatch(s->similar(s.hit().text(),h.text())>0.9);
+            // Never suppress independent sources as near duplicates: small changes can be conflicts.
+            // Even within one document, changed numbers must survive overlap deduplication.
+            boolean duplicate=result.stream().anyMatch(s->s.hit().documentId().equals(h.documentId())
+                && numbers(s.hit().text()).equals(numbers(h.text())) && similar(s.hit().text(),h.text())>0.9);
             if(duplicate) continue;
             used+=h.text().length()+80; texts.add(normalized); perDoc.merge(h.documentId(),1,Integer::sum);
             result.add(new Source("S"+(result.size()+1),h));
@@ -33,5 +35,8 @@ public class ContextAssembler {
         Set<String> y=new HashSet<>(List.of(b.toLowerCase(Locale.ROOT).split("\\W+")));
         Set<String> union=new HashSet<>(x); union.addAll(y); x.retainAll(y);
         return union.isEmpty() ? 0 : (double)x.size()/union.size();
+    }
+    private List<String> numbers(String text) {
+        return java.util.regex.Pattern.compile("\\d+(?:[.,]\\d+)?").matcher(text).results().map(java.util.regex.MatchResult::group).toList();
     }
 }
