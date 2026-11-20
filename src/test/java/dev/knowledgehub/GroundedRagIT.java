@@ -178,6 +178,7 @@ class GroundedRagIT {
                 assertThat(hits).allMatch(h->h.knowledgeBaseId().equals(g.knowledgeBase().equals("A") ? kb : b));
                 if(!g.relevantDocuments().isEmpty()) scores.add(RetrievalMetrics.score(hits.stream().map(ChunkRetriever.Hit::filename).toList(),new HashSet<>(g.relevantDocuments()),k));
             }
+            assertThat(scores.stream().mapToDouble(RetrievalMetrics.Score::hitRate).average().orElseThrow()).as(strategy.name()+" is operational").isGreaterThan(0);
             report.append(String.format(Locale.ROOT,"| %s | %.4f | %.4f | %.4f | %.4f |%n",strategy,scores.stream().mapToDouble(RetrievalMetrics.Score::recall).average().orElseThrow(),scores.stream().mapToDouble(RetrievalMetrics.Score::precision).average().orElseThrow(),scores.stream().mapToDouble(RetrievalMetrics.Score::reciprocalRank).average().orElseThrow(),scores.stream().mapToDouble(RetrievalMetrics.Score::hitRate).average().orElseThrow()));
         }
         for(var g:cases) {

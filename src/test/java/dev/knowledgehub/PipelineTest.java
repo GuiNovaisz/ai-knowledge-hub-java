@@ -124,4 +124,10 @@ class PipelineTest {
         var fused=PgChunkRetriever.fuse(List.of(a,b),List.of(c,b));
         assertThat(fused.getFirst().chunkId()).isEqualTo(b.chunkId()); assertThat(fused.getFirst().rankScore()).isCloseTo(2.0/62,within(0.00001));
     }
+    @Test void lexicalQueryProcessingUsesBoundedOrTermsAndPreservesCodes() {
+        assertThat(QueryProcessor.lexical("What is the return authorization code RMA-42?"))
+            .isEqualTo("return OR authorization OR code OR rma-42");
+        assertThat(QueryProcessor.lexical("what is the")).isEmpty();
+        assertThat(QueryProcessor.lexical("term ".repeat(100))).isEqualTo("term");
+    }
 }

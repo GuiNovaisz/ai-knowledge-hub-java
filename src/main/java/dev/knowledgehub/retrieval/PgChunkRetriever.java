@@ -21,6 +21,7 @@ public class PgChunkRetriever implements ChunkRetriever {
     }
     @Override public List<Hit> retrieve(UUID kb,String query,int topK,UUID documentId,Strategy strategy) {
         if(topK<1 || topK>20 || query==null || query.isBlank() || query.length()>2000) throw new HubException("INVALID_QUERY",400);
+        query=QueryProcessor.normalize(query);
         store.kb(kb); long started=System.nanoTime();
         try {
             // Even lexical candidates carry semantic similarity for the generation evidence gate.
@@ -48,7 +49,7 @@ public class PgChunkRetriever implements ChunkRetriever {
             (lexical ? " AND c.search_vector @@ websearch_to_tsquery('simple',:query) " : "")+
             " ORDER BY rank_score DESC,c.id LIMIT :lim";
         var statement=db.sql(sql).param("vector",vector).param("kb",kb).param("ev",settings.embeddingVersion()).param("lim",limit);
-        if(lexical) statement.param("query",query);
+        if(lexical) statement.param("query",QueryProcessor.lexical(query));
         if(doc!=null) statement.param("doc",doc);
         return statement.query(Hit.class).list();
     }
