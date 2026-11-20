@@ -23,9 +23,11 @@ Build inicial: Temurin 25.0.5 LTS com alvo `--release 21`, unitários e empacota
 
 O profile de modelo real é avaliação complementar opt-in e não bloqueia build. A execução real, seus resultados e limitações estão preservados no [relatório](real-model-evaluation.md); Ollama não é requisito do CI.
 
-## Fora desta milestone
+## Preparação da release
 
 Preparação v0.1.0: `mvnw.cmd verify` repetiu 17 unitários + 10 integrações, zero failures/errors/skips. Clean-start Compose em projeto/volume/rede exclusivos confirmou PostgreSQL 17.12 saudável, pgvector 0.8.7, Flyway V1 aplicada, corpus vazio, startup do JAR 0.1.0, health UP e OpenAPI 0.1.0. A asserção de versão do teste OpenAPI foi promovida sem alterar a quantidade de testes. CI cobre pushes de release/main além dos gates existentes. Não houve alteração funcional RAG ou repetição ritual da avaliação Ollama.
+
+## Fora desta milestone
 
 Autenticação/RBAC, serviço público, frontend, OCR, exclusão, ANN tuning, reindex distribuído com heartbeat, sandbox forte de PDF, cloud profile, reranker aprendido e agente/tools.
 
