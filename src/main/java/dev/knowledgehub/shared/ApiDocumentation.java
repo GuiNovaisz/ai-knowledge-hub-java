@@ -7,7 +7,7 @@ import org.springframework.context.annotation.*;
 @Configuration
 public class ApiDocumentation {
     @Bean OpenAPI openAPI() {
-        return new OpenAPI().info(new Info().title("AI Knowledge Hub").version("0.1.0-dev")
+        return new OpenAPI().info(new Info().title("AI Knowledge Hub").version("0.1.0")
             .description("Local-only grounded RAG. No authentication. Always supply knowledgeBaseId. Upload is synchronous; inspect document status for failures.")
             .license(new License().name("MIT")));
     }

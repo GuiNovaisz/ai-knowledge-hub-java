@@ -1,8 +1,8 @@
 # Review — v0.1.0 Grounded RAG Foundation
 
-Versão do projeto: **0.1.0-dev**. Feature integrada em `dev`; preparação de release pendente, sem promoção para release.
+Versão Maven/OpenAPI: **0.1.0**. Este registro reúne os gates da fundação e a preparação de release; as evidências históricas abaixo permanecem identificadas por execução/commit.
 
-**Estado: integrado em dev.** O [PR #1](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) foi integrado por merge commit `30b789b95c2e0aed789ee0415b0cc6d996874e3d`, sem conflitos. A validação pré-merge repetiu os 17 unitários e 10 integrações, zero falhas/erros/skips, com PostgreSQL/pgvector real. O [relatório determinístico](baseline-report.md) mantém os resultados e a proveniência da execução original.
+**Fundação validada.** O [PR #1](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) foi integrado em dev por merge commit `30b789b95c2e0aed789ee0415b0cc6d996874e3d`, sem conflitos. A validação pré-merge repetiu os 17 unitários e 10 integrações, zero falhas/erros/skips, com PostgreSQL/pgvector real. O [relatório determinístico](baseline-report.md) mantém os resultados e a proveniência da execução original.
 
 Build inicial: Temurin 25.0.5 LTS com alvo `--release 21`, unitários e empacotamento aprovados; integração inicial executada no CI. Na missão seguinte, Docker local e Ollama foram disponibilizados em segundo plano: os 27 testes passaram também localmente e a [avaliação real](real-model-evaluation.md) completou 10/10 casos após correções restritas de geração. A baseline determinística original permanece separada e inalterada.
 
@@ -25,8 +25,10 @@ O profile de modelo real é avaliação complementar opt-in e não bloqueia buil
 
 ## Fora desta milestone
 
+Preparação v0.1.0: `mvnw.cmd verify` repetiu 17 unitários + 10 integrações, zero failures/errors/skips. Clean-start Compose em projeto/volume/rede exclusivos confirmou PostgreSQL 17.12 saudável, pgvector 0.8.7, Flyway V1 aplicada, corpus vazio, startup do JAR 0.1.0, health UP e OpenAPI 0.1.0. A asserção de versão do teste OpenAPI foi promovida sem alterar a quantidade de testes. CI cobre pushes de release/main além dos gates existentes. Não houve alteração funcional RAG ou repetição ritual da avaliação Ollama.
+
 Autenticação/RBAC, serviço público, frontend, OCR, exclusão, ANN tuning, reindex distribuído com heartbeat, sandbox forte de PDF, cloud profile, reranker aprendido e agente/tools.
 
 ## Git
 
-Genealogia preservada: commit inicial MIT em `main`; feature derivada de `dev` e integrada integralmente em `dev` pelo PR #1, preservando seus commits. `main` permanece na baseline pré-release. Não houve integração `dev → main`, tag ou GitHub Release; a versão continua `0.1.0-dev`.
+Genealogia: commit inicial MIT em `main`; feature integrada integralmente em `dev` pelo PR #1; preparação `release/0.1.0 → dev → main` por PRs e merge commits. A tag e a publicação v0.1.0 dependem dos gates da missão de release. Consulte as [notas](releases/v0.1.0.md) e o histórico de PRs para o estado publicado, sem confundir as execuções históricas da fundação com a promoção de versão.
