@@ -1,0 +1,58 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${PORT:8080}
+spring:
+  application:
+    name: ai-knowledge-hub-java
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/knowledgehub}
+    username: ${DB_USER:knowledgehub}
+    password: ${DB_PASSWORD:local-development-only}
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 5000
+  jdbc:
+    template:
+      query-timeout: 5s
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      init:
+        pull-model-strategy: never
+      chat:
+        options:
+          model: ${AI_CHAT_MODEL:qwen3:1.7b}
+          temperature: 0
+          num-predict: 512
+      embedding:
+        options:
+          model: ${AI_EMBEDDING_MODEL:nomic-embed-text:v1.5}
+    retry:
+      max-attempts: 1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+logging:
+  structured:
+    format:
+      console: ecs
+hub:
+  dimensions: 768
+  embedding-version: nomic-v1.5-768-v1
+  chunk-characters: 1200
+  chunk-overlap: 180
+  max-characters: 200000
+  max-pages: 100
+  max-chunks: 300
+  context-characters: 6000
+  minimum-score: 0.65
+  provider-timeout-seconds: 60
