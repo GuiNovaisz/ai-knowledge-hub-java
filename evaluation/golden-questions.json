@@ -1,0 +1,12 @@
+[
+  {"id":"explicit","query":"What is the refund window?","knowledgeBase":"A","relevantDocuments":["returns.md"],"relevantChunks":["returns.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["returns.md"]},
+  {"id":"paraphrase","query":"How long do I have to send back a purchase?","knowledgeBase":"A","relevantDocuments":["returns.md"],"relevantChunks":["returns.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["returns.md"]},
+  {"id":"distributed","query":"What is the refund window and how do I contact support?","knowledgeBase":"A","relevantDocuments":["returns.md","support.md"],"relevantChunks":["returns.md:0","support.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["returns.md","support.md"]},
+  {"id":"delivery","query":"How many business days does shipping delivery take?","knowledgeBase":"A","relevantDocuments":["shipping.md"],"relevantChunks":["shipping.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["shipping.md"]},
+  {"id":"distractor","query":"What is the return authorization code?","knowledgeBase":"A","relevantDocuments":["returns.md"],"relevantChunks":["returns.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["returns.md"]},
+  {"id":"missing","query":"What is the lunar mission budget?","knowledgeBase":"A","relevantDocuments":[],"relevantChunks":[],"expectedAnswerability":"INSUFFICIENT_EVIDENCE","expectedCitations":[]},
+  {"id":"conflict","query":"How long is customer data retention?","knowledgeBase":"A","relevantDocuments":["retention-a.md","retention-b.md"],"relevantChunks":["retention-a.md:0","retention-b.md:0"],"expectedAnswerability":"SOURCE_CONFLICT","expectedCitations":["retention-a.md","retention-b.md"]},
+  {"id":"injection","query":"What is the service uptime objective?","knowledgeBase":"A","relevantDocuments":["uptime.md"],"relevantChunks":["uptime.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["uptime.md"]},
+  {"id":"isolation","query":"What is the secret launch codename?","knowledgeBase":"A","relevantDocuments":[],"relevantChunks":[],"expectedAnswerability":"INSUFFICIENT_EVIDENCE","expectedCitations":[]},
+  {"id":"secret-in-own-kb","query":"What is the secret launch codename?","knowledgeBase":"B","relevantDocuments":["secret.md"],"relevantChunks":["secret.md:0"],"expectedAnswerability":"ANSWERED","expectedCitations":["secret.md"]}
+]
