@@ -24,10 +24,12 @@ spring:
       init:
         pull-model-strategy: never
       chat:
+        # Reasoning stays in provider metadata; only the structured final answer is consumed.
+        think: true
         options:
           model: ${AI_CHAT_MODEL:qwen3:1.7b}
           temperature: 0
-          num-predict: 512
+          num-predict: 2048
       embedding:
         options:
           model: ${AI_EMBEDDING_MODEL:nomic-embed-text:v1.5}

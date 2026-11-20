@@ -45,6 +45,8 @@ public class QueryService {
             metrics.counter("hub.answers","status",completion.draft().status()).increment();
             if(completion.totalTokens()!=null) metrics.counter("hub.tokens").increment(completion.totalTokens());
             String answer=completion.draft().claims().stream().map(c->c.text()+" ["+String.join(",",c.sourceIds())+"]").reduce("",(a,b)->a.isEmpty() ? b : a+"\n"+b);
+            if(completion.draft().status().equals("SOURCE_CONFLICT"))
+                answer="As fontes recuperadas divergem; não é possível indicar uma conclusão única com segurança.\n"+answer;
             return new Answer(completion.draft().status(),answer,valid,metadata,completion.model(),completion.totalTokens(),MDC.get("correlationId"));
         } finally { MDC.remove("knowledgeBaseId"); MDC.remove("queryId"); }
     }
