@@ -1,8 +1,8 @@
 # AI Knowledge Hub Java
 
-**0.1.0-dev · Grounded RAG Foundation**
+**v0.1.0 · Grounded RAG Foundation**
 
-**INTEGRADO EM DEV — PREPARAÇÃO DE RELEASE PENDENTE** · [PR #1 merged → dev](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) · [verificação e limites](docs/review.md) · [baseline medida](docs/baseline-report.md)
+Backend local-first · [arquitetura](docs/architecture.md) · [segurança e limites](docs/security.md) · [verificação](docs/review.md) · [notas v0.1.0](docs/releases/v0.1.0.md)
 
 [Deterministic integration baseline](docs/baseline-report.md) e [Real-model evaluation — Ollama, 10/10](docs/real-model-evaluation.md) são avaliações separadas.
 
@@ -53,7 +53,7 @@ Para a avaliação opcional com Ollama real, use um banco de desenvolvimento e m
 
 ```powershell
 .\mvnw.cmd -DskipTests package
-java -jar target/ai-knowledge-hub-java-0.1.0-dev.jar --spring.profiles.active=evaluation
+java -jar target/ai-knowledge-hub-java-0.1.0.jar --spring.profiles.active=evaluation
 ```
 
 Esse job exige banco isolado sem corpus preexistente, cria duas KBs novas, processa os dez casos e grava `target/evaluation/real-model.json`; não limpa o banco. O relatório inclui Recall/Precision/MRR/Hit Rate por caso/estratégia, gates de answerability/citações e `RelevancyEvaluator` do Spring AI como juiz probabilístico complementar. Erros e gates falsos aparecem no relatório e devem ser revisados; a execução do job não significa que os gates passaram.

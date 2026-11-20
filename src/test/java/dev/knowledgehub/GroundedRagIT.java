@@ -151,7 +151,7 @@ class GroundedRagIT {
         var notFound=client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/api/v1/knowledge-bases/"+UUID.randomUUID())).GET().build(),HttpResponse.BodyHandlers.ofString());
         assertThat(notFound.statusCode()).isEqualTo(404);assertThat(notFound.body()).doesNotContain("SELECT");
         var openApi=client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/v3/api-docs")).GET().build(),HttpResponse.BodyHandlers.ofString());
-        assertThat(openApi.statusCode()).isEqualTo(200);assertThat(openApi.body()).contains("0.1.0-dev","Citation","StoredDocument","/api/v1/knowledge-bases/{id}/query");
+        assertThat(openApi.statusCode()).isEqualTo(200);assertThat(openApi.body()).contains("0.1.0","Citation","StoredDocument","/api/v1/knowledge-bases/{id}/query");
     }
     @Test void webApiSupportsUploadRetrievalAnswerAndAbstention() throws Exception {
         HttpClient client=HttpClient.newHttpClient();String base="http://127.0.0.1:"+port+"/api/v1/knowledge-bases/"+kb;

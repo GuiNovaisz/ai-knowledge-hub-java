@@ -1,6 +1,6 @@
 # Real-model evaluation — 20/11/2026
 
-Esta avaliação usa **Ollama real**, separada da [deterministic integration baseline](baseline-report.md). Resultado da configuração final: **10 casos avaliados, 10 passaram, 0 falharam**. Nenhum resultado do juiz foi convertido em prova determinística. A feature foi posteriormente integrada em `dev` pelo PR #1, sem tag, Release ou promoção de `0.1.0-dev`.
+Esta avaliação usa **Ollama real**, separada da [deterministic integration baseline](baseline-report.md). Resultado da configuração final: **10 casos avaliados, 10 passaram, 0 falharam**. Nenhum resultado do juiz foi convertido em prova determinística. Na época da avaliação, a versão era `0.1.0-dev`; a feature foi posteriormente integrada em `dev` pelo PR #1. A preparação/publicação de v0.1.0 ocorre em missão posterior e não altera estes resultados históricos.
 
 ## Environment
 
@@ -134,7 +134,7 @@ $env:DB_USER='eval'
 $env:DB_PASSWORD='local-eval-only'
 $env:SPRING_AI_OLLAMA_CHAT_OPTIONS_NUM_THREAD='2'
 .\mvnw.cmd verify
-java -Xmx512m -XX:ActiveProcessorCount=2 -jar target/ai-knowledge-hub-java-0.1.0-dev.jar --spring.profiles.active=evaluation
+java -Xmx512m -XX:ActiveProcessorCount=2 -jar target/ai-knowledge-hub-java-0.1.0.jar --spring.profiles.active=evaluation
 ```
 
 Repetir exige outro banco vazio. Os JSONs preservam timestamps, KBs/versões e o resultado por pergunta; não há seed ou alegação de determinismo para o modelo real.
@@ -145,6 +145,6 @@ Repetir exige outro banco vazio. Os JSONs preservam timestamps, KBs/versões e o
 - **Important: 0 na configuração final e neste corpus.** Falhas iniciais de contrato, abstention indevida e tratamento de conflito foram corrigidas e todas as perguntas repetidas. Isso não estabelece qualidade universal.
 - **Optional:** cold-start pode exceder o deadline; juiz de mesmo modelo tem viés e discorda no conflito; modelo pequeno e contexto podem acrescentar fatos sustentados mas pouco relevantes. Avaliação futura deve usar corpus maior independente, sem continuar ajustando este golden.
 
-Os **17 unitários + 10 integrações = 27** testes originais passaram após a última correção, com zero failures/errors/skips e pgvector real. Código/CI e artifacts finais são referenciados também no PR #1. A versão continua `0.1.0-dev`; PR #1 integrado em `dev` posteriormente por merge commit, sem alteração funcional ou nova execução desta avaliação.
+Os **17 unitários + 10 integrações = 27** testes originais passaram após a última correção, com zero failures/errors/skips e pgvector real. Código/CI e artifacts finais são referenciados também no PR #1. A execução ocorreu em `0.1.0-dev`; PR #1 integrado em `dev` posteriormente por merge commit, sem alteração funcional ou nova execução desta avaliação. O comando de reprodução acima usa o nome do JAR da release atual.
 
 CI Java 21 do código `ac42de5`: [run 44816678178 aprovado](https://github.com/GuiNovaisz/ai-knowledge-hub-java/actions/runs/44816678178). Os arquivos de teste e fixtures não têm diff contra `d1c1412`, e o workflow não recebeu requisito de Ollama.
