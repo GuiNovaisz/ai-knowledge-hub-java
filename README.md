@@ -2,6 +2,8 @@
 
 **0.1.0-dev · Grounded RAG Foundation**
 
+**READY FOR REVIEW** · [PR #1 → dev](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) · [verificação e limites](docs/review.md) · [baseline medida](docs/baseline-report.md)
+
 Backend Java de conhecimento com pipeline explícito de ingestão e RAG: documentos → parsing → normalização → chunks → embeddings → PostgreSQL/pgvector → retrieval → filtros → contexto → geração → validação de citações.
 
 Uma pergunta sem evidência suficiente recebe `INSUFFICIENT_EVIDENCE` antes de chamar o chat. As citações são derivadas dos chunks selecionados pelo backend. O modelo não fornece quotes nem IDs de documentos livremente.

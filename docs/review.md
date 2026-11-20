@@ -2,6 +2,10 @@
 
 Versão do projeto: **0.1.0-dev**. Este arquivo registra o escopo revisável, não representa promoção para release.
 
+**Estado: READY FOR REVIEW.** O [CI com Java 21](https://github.com/GuiNovaisz/ai-knowledge-hub-java/actions/runs/44806252910) passou no código `e8d1f8c`: 17 unitários e 10 integrações, zero falhas/erros/skips. PostgreSQL 17.12 e pgvector 0.8.7 reais. O [relatório medido](baseline-report.md) foi recuperado do artifact dessa execução.
+
+Build local: Temurin 25.0.5 LTS com alvo `--release 21`, `mvnw.cmd test` passou e `mvnw.cmd -DskipTests package` empacotou o JAR; Compose validado com `docker compose config --quiet`. O Docker local estava inativo; a prova de integração foi executada no CI. A avaliação opcional com modelos Ollama reais **não foi executada**; não há resultados de qualidade semântica real ou calibragem de threshold para apresentar.
+
 ## Implementado
 
 - Java 21 target, Boot 4.2.0, AI 2.1.0, wrappers, Compose, Flyway e Actions.

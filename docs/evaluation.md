@@ -17,6 +17,8 @@ Para cada pergunta answerable com conjunto relevante R e ranking deduplicado nos
 
 O relatório usa médias macro, K=3. Casos sem documentos relevantes não entram nos denominadores de recall, pois `|R|=0`; são avaliados por abstention, ausência de fontes e isolamento. Thresholds e orçamento são gates posteriores ao retrieval técnico.
 
+A execução aprovada está preservada em [baseline-report.md](baseline-report.md), com link do CI e commit de código. Na fixture medida, VECTOR e HYBRID empataram e LEXICAL obteve MRR maior. Isso não calibra um modelo real nem comprova superioridade geral; mantém-se a baseline vetorial conservadora e hybrid somente para comparação técnica.
+
 ## Dois níveis separados
 
 `./mvnw verify` executa PostgreSQL/pgvector real via Testcontainers. Os embeddings são um test double explícito de 768 dimensões, com conceitos conhecidos e vetores ortogonais. O chat é um test double que copia fontes e expõe status determinístico para conflito. Isso prova SQL, fusão, estados, proveniência e lógica de gates; **não prova semântica real, fidelidade de geração ou resistência geral do modelo a injection**.
