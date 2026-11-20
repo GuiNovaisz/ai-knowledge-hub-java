@@ -11,6 +11,7 @@ public class CorpusStore {
     public record KnowledgeBase(UUID id,String name,String description,OffsetDateTime createdAt) {}
     public record StoredDocument(UUID id,UUID knowledgeBaseId,String filename,String mediaType,String checksum,
         String status,String failureReason,OffsetDateTime createdAt,OffsetDateTime indexedAt,UUID activeVersion) {}
+    public record Reservation(StoredDocument document,boolean created) {}
     private final JdbcClient db;
     public CorpusStore(JdbcClient db) { this.db=db; }
     public KnowledgeBase create(String name,String description) {
@@ -33,12 +34,13 @@ public class CorpusStore {
         return db.sql("SELECT "+FIELDS+" FROM document WHERE kb_id=:kb ORDER BY created_at DESC LIMIT 100")
             .param("kb",kb).query(StoredDocument.class).list();
     }
-    public StoredDocument reserve(UUID kb,String filename,String type,String checksum,byte[] original) {
+    public Reservation reserve(UUID kb,String filename,String type,String checksum,byte[] original) {
         kb(kb); UUID id=UUID.randomUUID();
-        db.sql("INSERT INTO document(id,kb_id,filename,media_type,checksum,original,status) VALUES(:id,:kb,:name,:type,:sum,:bytes,'UPLOADED') ON CONFLICT(kb_id,checksum) DO NOTHING")
+        int inserted=db.sql("INSERT INTO document(id,kb_id,filename,media_type,checksum,original,status) VALUES(:id,:kb,:name,:type,:sum,:bytes,'UPLOADED') ON CONFLICT(kb_id,checksum) DO NOTHING")
             .param("id",id).param("kb",kb).param("name",filename).param("type",type).param("sum",checksum).param("bytes",original).update();
-        return db.sql("SELECT "+FIELDS+" FROM document WHERE kb_id=:kb AND checksum=:sum").param("kb",kb).param("sum",checksum)
+        var document=db.sql("SELECT "+FIELDS+" FROM document WHERE kb_id=:kb AND checksum=:sum").param("kb",kb).param("sum",checksum)
             .query(StoredDocument.class).single();
+        return new Reservation(document,inserted==1);
     }
     public byte[] original(UUID kb,UUID id) {
         return db.sql("SELECT original FROM document WHERE kb_id=:kb AND id=:id").param("kb",kb).param("id",id).query(byte[].class).single();

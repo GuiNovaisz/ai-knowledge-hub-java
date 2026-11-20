@@ -34,9 +34,10 @@ public class IngestionService {
         String checksum;
         try { checksum=HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes)); }
         catch(NoSuchAlgorithmException e) { throw new IllegalStateException(e); }
-        StoredDocument doc=store.reserve(kb,name,type,checksum,bytes);
+        var reservation=store.reserve(kb,name,type,checksum,bytes);
+        StoredDocument doc=reservation.document();
         // Existing identities (including FAILED/PROCESSING) are returned; retry is explicit.
-        if(!doc.status().equals("UPLOADED")) return doc;
+        if(!reservation.created()) return doc;
         try { return reindex(kb,doc.id()); }
         catch(HubException e) { if(e.code().equals("INGESTION_IN_PROGRESS")) return store.document(kb,doc.id()); throw e; }
     }

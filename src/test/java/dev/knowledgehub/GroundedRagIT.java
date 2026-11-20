@@ -93,6 +93,16 @@ class GroundedRagIT {
         }
         assertThat(store.documents(kb)).hasSize(1);
         assertThat(db.sql("SELECT count(*) FROM chunk").query(Long.class).single()).isEqualTo(1);
+        verify(embeddings,times(1)).embed(anyString(),eq(false));
+    }
+    @Test void duplicateOfReservedUploadNeverStartsImplicitIndexing() throws Exception {
+        byte[] bytes="Refund window is thirty days.".getBytes(StandardCharsets.UTF_8);
+        String checksum=HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(bytes));
+        var reserved=store.reserve(kb,"reserved.md","text/markdown",checksum,bytes);
+        assertThat(reserved.created()).isTrue();
+        var duplicate=ingestion.upload(kb,"renamed.md","text/markdown",bytes);
+        assertThat(duplicate.id()).isEqualTo(reserved.document().id());assertThat(duplicate.status()).isEqualTo("UPLOADED");
+        verify(embeddings,never()).embed(anyString(),anyBoolean());
     }
     @Test void embeddingFailurePublishesNoPartialChunksAndRetryReplacesVersion() {
         AtomicInteger calls=new AtomicInteger();
