@@ -47,7 +47,7 @@ public class PgChunkRetriever implements ChunkRetriever {
                AND c.embedding_version=:ev
             """+(doc==null ? "" : " AND c.document_id=:doc ")+
             (lexical ? " AND c.search_vector @@ websearch_to_tsquery('simple',:query) " : "")+
-            " ORDER BY rank_score DESC,c.id LIMIT :lim";
+            " ORDER BY rank_score DESC,d.filename,d.checksum,c.chunk_index LIMIT :lim";
         var statement=db.sql(sql).param("vector",vector).param("kb",kb).param("ev",settings.embeddingVersion()).param("lim",limit);
         if(lexical) statement.param("query",QueryProcessor.lexical(query));
         if(doc!=null) statement.param("doc",doc);
@@ -59,6 +59,7 @@ public class PgChunkRetriever implements ChunkRetriever {
             Hit h=list.get(rank); hits.put(h.chunkId(),h); scores.merge(h.chunkId(),1.0/(60+rank+1),Double::sum);
         }
         return hits.values().stream().map(h->new Hit(h.chunkId(),h.knowledgeBaseId(),h.documentId(),h.filename(),h.page(),h.chunkIndex(),h.heading(),h.ingestionVersion(),h.text(),h.score(),scores.get(h.chunkId())))
-            .sorted(Comparator.comparingDouble(Hit::rankScore).reversed().thenComparing(Hit::chunkId)).toList();
+            .sorted(Comparator.comparingDouble(Hit::rankScore).reversed().thenComparing(Hit::filename)
+                .thenComparingInt(Hit::chunkIndex).thenComparing(Hit::text).thenComparing(Hit::chunkId)).toList();
     }
 }

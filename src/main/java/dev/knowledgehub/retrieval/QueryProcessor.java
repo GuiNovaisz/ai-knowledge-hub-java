@@ -5,7 +5,7 @@ import java.util.*;
 
 /** Bounded lexical candidate expansion; no LLM, SQL interpolation or implicit synonyms. */
 public final class QueryProcessor {
-    private static final Set<String> STOPWORDS=Set.of("what","is","the","how","many","long","do","does","i","have","to","a","an","and","of","in","for","it","my","me","are","can","which","o","aos","as","os","de","da","dois","em","que","qual","como","quanto","por","para","um","uma");
+    private static final Set<String> STOPWORDS=Set.of("what","is","the","how","many","long","do","does","i","have","to","a","an","and","of","in","for","it","my","me","are","can","which","o","aos","as","os","de","da","das","dos","em","que","qual","como","quanto","por","para","um","uma");
     private QueryProcessor() {}
     public static String normalize(String query) {
         return Normalizer.normalize(query,Normalizer.Form.NFKC).replaceAll("\\s+"," ").strip();
