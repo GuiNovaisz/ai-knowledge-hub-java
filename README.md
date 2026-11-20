@@ -2,7 +2,7 @@
 
 **0.1.0-dev · Grounded RAG Foundation**
 
-**READY FOR REVIEW** · [PR #1 → dev](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) · [verificação e limites](docs/review.md) · [baseline medida](docs/baseline-report.md)
+**INTEGRADO EM DEV — PREPARAÇÃO DE RELEASE PENDENTE** · [PR #1 merged → dev](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) · [verificação e limites](docs/review.md) · [baseline medida](docs/baseline-report.md)
 
 [Deterministic integration baseline](docs/baseline-report.md) e [Real-model evaluation — Ollama, 10/10](docs/real-model-evaluation.md) são avaliações separadas.
 

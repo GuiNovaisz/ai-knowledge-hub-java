@@ -1,8 +1,8 @@
 # Review — v0.1.0 Grounded RAG Foundation
 
-Versão do projeto: **0.1.0-dev**. Este arquivo registra o escopo revisável, não representa promoção para release.
+Versão do projeto: **0.1.0-dev**. Feature integrada em `dev`; preparação de release pendente, sem promoção para release.
 
-**Estado: READY FOR REVIEW.** O [CI com Java 21](https://github.com/GuiNovaisz/ai-knowledge-hub-java/actions/runs/44806252910) passou no código `e8d1f8c`: 17 unitários e 10 integrações, zero falhas/erros/skips. PostgreSQL 17.12 e pgvector 0.8.7 reais. O [relatório medido](baseline-report.md) foi recuperado do artifact dessa execução.
+**Estado: integrado em dev.** O [PR #1](https://github.com/GuiNovaisz/ai-knowledge-hub-java/pull/1) foi integrado por merge commit `30b789b95c2e0aed789ee0415b0cc6d996874e3d`, sem conflitos. A validação pré-merge repetiu os 17 unitários e 10 integrações, zero falhas/erros/skips, com PostgreSQL/pgvector real. O [relatório determinístico](baseline-report.md) mantém os resultados e a proveniência da execução original.
 
 Build inicial: Temurin 25.0.5 LTS com alvo `--release 21`, unitários e empacotamento aprovados; integração inicial executada no CI. Na missão seguinte, Docker local e Ollama foram disponibilizados em segundo plano: os 27 testes passaram também localmente e a [avaliação real](real-model-evaluation.md) completou 10/10 casos após correções restritas de geração. A baseline determinística original permanece separada e inalterada.
 
@@ -17,11 +17,11 @@ Build inicial: Temurin 25.0.5 LTS com alvo `--release 21`, unitários e empacota
 - Erros categorizados, Micrometer, ECS, correlationId e OpenAPI.
 - Corpus/golden, métricas, unitários, Testcontainers e avaliação Spring AI opt-in.
 
-## Critério para READY FOR REVIEW
+## Critérios de validação
 
 `./mvnw verify` precisa passar com Java 21 e Docker, incluindo os gates de pgvector real. O relatório medido deve estar anexado ao PR ou versionado após execução. Se o ambiente impedir qualquer gate, registrar o impedimento explicitamente; não apresentar a missão como completa.
 
-O profile de modelo real é avaliação complementar opcional e não bloqueia build. Até ser executado, a qualidade semântica real, calibragem de threshold e comportamento com conflitos devem permanecer como limitações declaradas.
+O profile de modelo real é avaliação complementar opt-in e não bloqueia build. A execução real, seus resultados e limitações estão preservados no [relatório](real-model-evaluation.md); Ollama não é requisito do CI.
 
 ## Fora desta milestone
 
@@ -29,4 +29,4 @@ Autenticação/RBAC, serviço público, frontend, OCR, exclusão, ANN tuning, re
 
 ## Git
 
-Genealogia esperada: commit inicial MIT em `main`; `dev` deriva desse commit; `feature/grounded-rag-foundation` deriva de `dev` e contém implementação. PR contra `dev` para revisão. Não efetuar merge, tag ou GitHub Release nesta missão.
+Genealogia preservada: commit inicial MIT em `main`; feature derivada de `dev` e integrada integralmente em `dev` pelo PR #1, preservando seus commits. `main` permanece na baseline pré-release. Não houve integração `dev → main`, tag ou GitHub Release; a versão continua `0.1.0-dev`.
