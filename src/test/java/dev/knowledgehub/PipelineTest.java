@@ -44,6 +44,9 @@ class PipelineTest {
         }
         var pages=new SafeDocumentParser(settings).parse(out.toByteArray(),"application/pdf");
         assertThat(pages).hasSize(2); assertThat(pages.get(1).number()).isEqualTo(2); assertThat(pages.get(0).text()).contains("thirty days");
+        var onePage=new HubSettings(768,"test",1200,180,200000,1,300,6000,0.65,1);
+        assertThatThrownBy(()->new SafeDocumentParser(onePage).parse(out.toByteArray(),"application/pdf"))
+            .isInstanceOfSatisfying(HubException.class,e->assertThat(e.code()).isEqualTo("PAGE_LIMIT"));
         assertThatThrownBy(()->new SafeDocumentParser(settings).parse("%PDF-broken".getBytes(),"application/pdf")).isInstanceOf(HubException.class);
     }
     @Test void chunksAreBoundedWithOverlapAndNoCrossPageMixing() {
@@ -59,6 +62,13 @@ class PipelineTest {
         assertThatThrownBy(()->SpringAiEmbeddingProvider.validate(new float[768],768)).isInstanceOf(HubException.class);
         float[] vector=new float[768]; vector[0]=Float.NaN;
         assertThatThrownBy(()->SpringAiEmbeddingProvider.validate(vector,768)).isInstanceOf(HubException.class);
+    }
+    @Test void limitsExtractedTextAndChunkExplosion() {
+        assertThatThrownBy(()->new SafeDocumentParser(settings).parse("x".repeat(200001).getBytes(StandardCharsets.UTF_8),"text/plain"))
+            .isInstanceOfSatisfying(HubException.class,e->assertThat(e.code()).isEqualTo("CHARACTER_LIMIT"));
+        var singleChunk=new HubSettings(768,"test",200,20,200000,100,1,6000,0.65,1);
+        assertThatThrownBy(()->new ParagraphChunker(singleChunk).split(List.of(new DocumentParser.Page(1,"word ".repeat(100)))))
+            .isInstanceOfSatisfying(HubException.class,e->assertThat(e.code()).isEqualTo("CHUNK_LIMIT"));
     }
     @Test void contextEnforcesKbThresholdBudgetInjectionAndDeduplication() {
         UUID kb=UUID.randomUUID();var assembler=new ContextAssembler(settings,new EvidenceFilter());

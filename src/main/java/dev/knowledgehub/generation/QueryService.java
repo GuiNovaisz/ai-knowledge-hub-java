@@ -19,13 +19,16 @@ public class QueryService {
     private final GroundedChat chat;
     private final CitationValidator citations;
     private final MeterRegistry metrics;
+    private static final Logger log=LoggerFactory.getLogger(QueryService.class);
     public QueryService(ChunkRetriever retriever,DocumentReranker reranker,ContextAssembler assembler,GroundedChat chat,CitationValidator citations,MeterRegistry metrics) {
         this.retriever=retriever;this.reranker=reranker;this.assembler=assembler;this.chat=chat;this.citations=citations;this.metrics=metrics;
     }
     public Answer query(UUID kb,String question,int topK,UUID documentId) {
         MDC.put("knowledgeBaseId",kb.toString()); MDC.put("queryId",UUID.randomUUID().toString());
         try {
+            log.info("Query pipeline started");
             var hits=retriever.retrieve(kb,question,topK,documentId,ChunkRetriever.Strategy.VECTOR);
+            if(hits.stream().anyMatch(h->!h.knowledgeBaseId().equals(kb))) throw new dev.knowledgehub.shared.HubException("RETRIEVAL_ISOLATION_FAILURE",503);
             List<RetrievalMetadata> metadata=new ArrayList<>();
             for(int n=0;n<hits.size();n++) { var h=hits.get(n); metadata.add(new RetrievalMetadata(n+1,h.chunkId(),h.documentId(),h.filename(),h.page(),h.score(),h.rankScore())); }
             long rerankStarted=System.nanoTime();

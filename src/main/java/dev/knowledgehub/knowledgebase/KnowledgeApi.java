@@ -26,16 +26,16 @@ public class KnowledgeApi {
     public KnowledgeApi(CorpusStore store,IngestionService ingestion,QueryService questions,ChunkRetriever retriever) {
         this.store=store;this.ingestion=ingestion;this.questions=questions;this.retriever=retriever;
     }
-    @PostMapping @ResponseStatus(HttpStatus.CREATED) public Object create(@Valid @RequestBody CreateKb request) { return store.create(request.name(),request.description()); }
-    @GetMapping("/{id}") public Object get(@PathVariable UUID id) { return store.kb(id); }
+    @PostMapping @ResponseStatus(HttpStatus.CREATED) public CorpusStore.KnowledgeBase create(@Valid @RequestBody CreateKb request) { return store.create(request.name(),request.description()); }
+    @GetMapping("/{id}") public CorpusStore.KnowledgeBase get(@PathVariable UUID id) { return store.kb(id); }
     @PostMapping(value="/{id}/documents",consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Object upload(@PathVariable UUID id,@RequestParam("file") MultipartFile file) throws IOException {
+    public CorpusStore.StoredDocument upload(@PathVariable UUID id,@RequestParam("file") MultipartFile file) throws IOException {
         if(file.getSize()>5*1024*1024) throw new HubException("UPLOAD_TOO_LARGE",413);
         return ingestion.upload(id,file.getOriginalFilename(),file.getContentType(),file.getBytes());
     }
-    @GetMapping("/{id}/documents") public Object documents(@PathVariable UUID id) { return store.documents(id); }
-    @GetMapping("/{id}/documents/{documentId}") public Object document(@PathVariable UUID id,@PathVariable UUID documentId) { return store.document(id,documentId); }
-    @PostMapping("/{id}/documents/{documentId}/reindex") public Object reindex(@PathVariable UUID id,@PathVariable UUID documentId) { return ingestion.reindex(id,documentId); }
-    @PostMapping("/{id}/query") public Object query(@PathVariable UUID id,@Valid @RequestBody Query query) { return questions.query(id,query.query(),query.topK(),query.documentId()); }
-    @PostMapping("/{id}/retrieval") public Object retrieval(@PathVariable UUID id,@Valid @RequestBody RetrievalQuery query) { return retriever.retrieve(id,query.query(),query.topK(),query.documentId(),query.strategy()); }
+    @GetMapping("/{id}/documents") public List<CorpusStore.StoredDocument> documents(@PathVariable UUID id) { return store.documents(id); }
+    @GetMapping("/{id}/documents/{documentId}") public CorpusStore.StoredDocument document(@PathVariable UUID id,@PathVariable UUID documentId) { return store.document(id,documentId); }
+    @PostMapping("/{id}/documents/{documentId}/reindex") public CorpusStore.StoredDocument reindex(@PathVariable UUID id,@PathVariable UUID documentId) { return ingestion.reindex(id,documentId); }
+    @PostMapping("/{id}/query") public QueryService.Answer query(@PathVariable UUID id,@Valid @RequestBody Query query) { return questions.query(id,query.query(),query.topK(),query.documentId()); }
+    @PostMapping("/{id}/retrieval") public List<ChunkRetriever.Hit> retrieval(@PathVariable UUID id,@Valid @RequestBody RetrievalQuery query) { return retriever.retrieve(id,query.query(),query.topK(),query.documentId(),query.strategy()); }
 }

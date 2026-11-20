@@ -140,6 +140,24 @@ class GroundedRagIT {
         assertThat(response.statusCode()).isEqualTo(400);assertThat(response.body()).contains("INVALID_INPUT");assertThat(response.headers().firstValue("X-Correlation-ID")).isPresent();
         var notFound=client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/api/v1/knowledge-bases/"+UUID.randomUUID())).GET().build(),HttpResponse.BodyHandlers.ofString());
         assertThat(notFound.statusCode()).isEqualTo(404);assertThat(notFound.body()).doesNotContain("SELECT");
+        var openApi=client.send(HttpRequest.newBuilder(URI.create("http://127.0.0.1:"+port+"/v3/api-docs")).GET().build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(openApi.statusCode()).isEqualTo(200);assertThat(openApi.body()).contains("0.1.0-dev","Citation","StoredDocument","/api/v1/knowledge-bases/{id}/query");
+    }
+    @Test void webApiSupportsUploadRetrievalAnswerAndAbstention() throws Exception {
+        HttpClient client=HttpClient.newHttpClient();String base="http://127.0.0.1:"+port+"/api/v1/knowledge-bases/"+kb;
+        String boundary="KnowledgeHubTestBoundary";
+        String body="--"+boundary+"\r\nContent-Disposition: form-data; name=\"file\"; filename=\"policy.md\"\r\nContent-Type: text/markdown\r\n\r\nRefund window is thirty days.\r\n--"+boundary+"--\r\n";
+        var uploaded=client.send(HttpRequest.newBuilder(URI.create(base+"/documents")).header("Content-Type","multipart/form-data; boundary="+boundary).POST(HttpRequest.BodyPublishers.ofString(body)).build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(uploaded.statusCode()).isEqualTo(200);assertThat(uploaded.body()).contains("READY","policy.md");
+        String id=new ObjectMapper().readTree(uploaded.body()).get("id").asString();
+        var detail=client.send(HttpRequest.newBuilder(URI.create(base+"/documents/"+id)).GET().build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(detail.statusCode()).isEqualTo(200);assertThat(detail.body()).doesNotContain("original");
+        var answered=client.send(HttpRequest.newBuilder(URI.create(base+"/query")).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString("{\"query\":\"refund window\",\"topK\":5}")).build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(answered.statusCode()).isEqualTo(200);assertThat(answered.body()).contains("ANSWERED","citations","thirty days");
+        var missing=client.send(HttpRequest.newBuilder(URI.create(base+"/query")).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString("{\"query\":\"lunar mission budget\",\"topK\":5}")).build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(missing.statusCode()).isEqualTo(200);assertThat(missing.body()).contains("INSUFFICIENT_EVIDENCE");
+        var inspected=client.send(HttpRequest.newBuilder(URI.create(base+"/retrieval")).header("Content-Type","application/json").POST(HttpRequest.BodyPublishers.ofString("{\"query\":\"refund\",\"topK\":3,\"strategy\":\"HYBRID\"}")).build(),HttpResponse.BodyHandlers.ofString());
+        assertThat(inspected.statusCode()).isEqualTo(200);assertThat(inspected.body()).contains("rankScore","policy.md");
     }
     record Golden(String id,String query,String knowledgeBase,List<String> relevantDocuments,List<String> relevantChunks,String expectedAnswerability,List<String> expectedCitations) {}
     @Test void goldenDatasetProducesReproducibleBaselineAndPassesDeterministicGates() throws Exception {
